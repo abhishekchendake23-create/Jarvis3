@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ABHYNEX JARVIS</title>
+<meta name="theme-color" content="#02060f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body data-state="IDLE">
+<div class="stars" aria-hidden="true"></div>
+
+<section id="lock" class="lock">
+  <div class="orb orb-sm" aria-hidden="true"><i></i></div>
+  <h1 class="brand">ABHYNEX JARVIS</h1>
+  <form id="lockForm" autocomplete="off">
+    <label for="passcode">Enter Passcode</label>
+    <input id="passcode" type="password" inputmode="text" autocomplete="current-password" placeholder="Passcode" required>
+    <button type="submit" class="btn primary" id="unlockBtn">Unlock</button>
+    <p id="lockError" class="err" role="alert"></p>
+  </form>
+</section>
+
+<div id="app" hidden>
+  <header class="top">
+    <div>
+      <div class="brand small">ABHYNEX JARVIS</div>
+      <div class="online"><span class="dot"></span>JARVIS ONLINE</div>
+    </div>
+    <button id="voiceToggle" class="chip" aria-pressed="true" aria-label="Turn voice output on or off">Voice ON</button>
+  </header>
+
+  <main>
+    <section id="view-home" class="view active">
+      <div class="orb" aria-hidden="true"><i></i><b></b></div>
+      <div id="stateLabel" class="state" role="status" aria-live="polite">IDLE</div>
+      <h2 class="hello">How can I help you?</h2>
+      <p id="stateHint" class="hint">Tap the microphone and speak, or type below.</p>
+      <div id="lastReply" class="last" hidden></div>
+      <div class="row center">
+        <button id="micBtn" class="mic" aria-label="Start voice input" aria-pressed="false">
+          <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path fill="currentColor" d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 0 0-7 0v6A3.5 3.5 0 0 0 12 15Zm6-3.5a1 1 0 1 0-2 0 4 4 0 0 1-8 0 1 1 0 1 0-2 0 6 6 0 0 0 5 5.92V20H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.58A6 6 0 0 0 18 11.5Z"/></svg>
+        </button>
+      </div>
+      <div class="row center">
+        <button id="stopSpeakBtn" class="btn ghost" hidden>Stop Speaking</button>
+        <button id="installBtn" class="btn ghost" hidden>Install JARVIS</button>
+      </div>
+    </section>
+
+    <section id="view-chat" class="view">
+      <div class="toolbar">
+        <button class="btn ghost sm" id="newChatBtn">New Chat</button>
+        <button class="btn ghost sm" id="clearChatBtn">Clear Chat</button>
+        <button class="btn ghost sm" id="historyBtn">History</button>
+      </div>
+      <div id="messages" class="messages" aria-live="polite"></div>
+    </section>
+
+    <section id="view-memory" class="view">
+      <h2 class="h2">Conversation History</h2>
+      <div id="historyList" class="list"></div>
+      <h2 class="h2">Remembered notes</h2>
+      <div id="notesList" class="list"></div>
+      <button id="clearAllBtn" class="btn danger wide">Clear All Memory</button>
+    </section>
+
+    <section id="view-settings" class="view">
+      <h2 class="h2">Settings</h2>
+      <label class="field">Language
+        <select id="langSel">
+          <option value="en-IN">English</option>
+          <option value="hi-IN">हिन्दी (Hindi)</option>
+          <option value="mr-IN">मराठी (Marathi)</option>
+        </select>
+      </label>
+      <label class="field">Voice
+        <select id="voiceSel"></select>
+      </label>
+      <label class="field">Voice Speed <output id="rateOut">1.0x</output>
+        <input id="rateRange" type="range" min="0.6" max="1.5" step="0.1" value="1">
+      </label>
+      <label class="field inline"><span>Auto Speak</span><input id="autoSpeak" type="checkbox"></label>
+      <button id="testVoiceBtn" class="btn ghost wide">Test voice</button>
+      <button id="installBtn2" class="btn primary wide" hidden>Install App</button>
+      <p id="installHelp" class="hint" hidden>To install: Chrome → ⋮ → Add to Home screen</p>
+      <button id="clearMemBtn2" class="btn danger wide">Clear Memory</button>
+      <button id="logoutBtn" class="btn ghost wide">Lock JARVIS</button>
+    </section>
+  </main>
+
+  <form id="composer" class="composer" autocomplete="off">
+    <input id="msgInput" type="text" enterkeyhint="send" placeholder="Talk to JARVIS..." aria-label="Message to JARVIS" maxlength="2000">
+    <button type="submit" class="send" id="sendBtn" aria-label="Send message">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12 2-12 2z"/></svg>
+    </button>
+  </form>
+
+  <nav class="nav" aria-label="Main">
+    <button data-view="home" class="active"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>Home</button>
+    <button data-view="chat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Chat</button>
+    <button data-view="memory"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 9h6M9 13h6" stroke="currentColor" stroke-width="2"/></svg>Memory</button>
+    <button data-view="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="7" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/></svg>Settings</button>
+  </nav>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script src="/app.js"></script>
+</body>
+</html>

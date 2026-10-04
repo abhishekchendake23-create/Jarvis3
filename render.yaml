@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: abhynex-jarvis
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: APP_PASSCODE
+        sync: false
+      - key: GEMINI_MODEL
+        sync: false
+      - key: SEARCH_API_KEY
+        sync: false
